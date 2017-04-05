@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven'
 
     id 'net.minecrell.licenser' version '0.3'
 }
@@ -22,6 +23,63 @@ dependencies {
 
 license {
     header = file('HEADER.txt')
+}
+
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar, dependsOn: 'classes') {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (System.getenv('MAVEN_RELEASES') != null) {
+                repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
+                snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
+            }
+
+            pom {
+                artifactId = project.archivesBaseName
+
+                project {
+                    name = project.name
+                    description = project.description
+                    packaging = 'jar'
+                    url = 'https://github.com/jamiemansfield/text'
+
+                    scm {
+                        url = 'https://github.com/jamiemansfield/text'
+                        connection = 'scm:git:https://github.com/jamiemansfield/text.git'
+                        developerConnection = 'scm:git:git@github.com:jamiemansfield/text.git'
+                    }
+
+                    issueManagement {
+                        system = 'GitHub'
+                        url = 'https://github.com/jamiemansfield/text/issues'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'http://opensource.org/licenses/MIT'
+                            distribution = 'repo'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 task wrapper(type: Wrapper) {
