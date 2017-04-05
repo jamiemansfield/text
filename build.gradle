@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+
+    id 'net.minecrell.licenser' version '0.3'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'me.jamiemansfield.mc'
+archivesBaseName = project.name.toLowerCase()
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:21.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+}
+
+license {
+    header = file('HEADER.txt')
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14.1'
+}
