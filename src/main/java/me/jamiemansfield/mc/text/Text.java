@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents a text object within Minecraft.
@@ -85,11 +86,14 @@ public abstract class Text {
 
     final Map<TextDecoration, Boolean> decorations;
     final TextColour colour;
+    final Optional<String> insertion;
     final List<Text> children;
 
-    Text(final Map<TextDecoration, Boolean> decorations, final TextColour colour, final List<Text> children) {
+    Text(final Map<TextDecoration, Boolean> decorations, final TextColour colour, final Optional<String> insertion,
+            final List<Text> children) {
         this.decorations = decorations;
         this.colour = colour;
+        this.insertion = insertion;
         this.children = children;
     }
 
@@ -167,6 +171,15 @@ public abstract class Text {
     }
 
     /**
+     * Gets the {@link String} to be inserted into chat should the text be shift-clicked.
+     *
+     * @return The insertion string
+     */
+    public Optional<String> getInsertion() {
+        return this.insertion;
+    }
+
+    /**
      * Returns all of the children of the text.
      *
      * @return The children
@@ -203,8 +216,10 @@ public abstract class Text {
 
     MoreObjects.ToStringHelper getStringHelper() {
         return MoreObjects.toStringHelper(this)
+                .omitNullValues()
                 .add("decorations", this.decorations)
                 .add("colour", this.colour)
+                .add("insertion", this.insertion.orElse(null))
                 .add("children", this.children);
     }
 
@@ -231,6 +246,7 @@ public abstract class Text {
         final Text that = (Text) obj;
         return this.decorations.equals(that.decorations) &&
                 this.colour.equals(that.colour) &&
+                this.insertion == that.insertion &&
                 this.children.equals(that.children);
     }
 
@@ -239,7 +255,7 @@ public abstract class Text {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.decorations, this.colour, this.children);
+        return Objects.hash(this.decorations, this.colour, this.insertion, this.children);
     }
 
     /**
@@ -249,6 +265,7 @@ public abstract class Text {
 
         final Map<TextDecoration, Boolean> decorations = Maps.newHashMap();
         TextColour colour = TextColour.NONE;
+        Optional<String> insertion = Optional.empty();
         final List<Text> children = Lists.newArrayList();
 
         Builder() {
@@ -303,6 +320,17 @@ public abstract class Text {
          */
         public Builder apply(final TextColour colour) {
             this.colour = colour;
+            return this;
+        }
+
+        /**
+         * Applies the given {@link String} insertion to the text.
+         *
+         * @param insertion The insertion to insert upon a shift-click
+         * @return The builder
+         */
+        public Builder insertion(final String insertion) {
+            this.insertion = Optional.of(insertion);
             return this;
         }
 

@@ -32,6 +32,7 @@ import me.jamiemansfield.mc.text.format.TextDecoration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents a literal text object within Minecraft. This simply means that
@@ -45,8 +46,9 @@ public final class LiteralText extends Text {
 
     private final String content;
 
-    private LiteralText(final String content, final Map<TextDecoration, Boolean> decorations, final TextColour colour, final List<Text> children) {
-        super(decorations, colour, children);
+    private LiteralText(final String content, final Map<TextDecoration, Boolean> decorations, final TextColour colour,
+            final Optional<String> insertion, final List<Text> children) {
+        super(decorations, colour, insertion, children);
         this.content = content;
     }
 
@@ -118,7 +120,7 @@ public final class LiteralText extends Text {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.content, this.decorations, this.colour, this.children);
+        return Objects.hash(this.content, this.decorations, this.colour, this.insertion, this.children);
     }
 
     public static final class Builder extends Text.Builder {
@@ -194,8 +196,16 @@ public final class LiteralText extends Text {
          * {@inheritDoc}
          */
         @Override
+        public Builder insertion(final String insertion) {
+            return (Builder) super.insertion(insertion);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public LiteralText build() {
-            return new LiteralText(this.content, this.decorations, this.colour, this.children);
+            return new LiteralText(this.content, this.decorations, this.colour, this.insertion, this.children);
         }
 
     }

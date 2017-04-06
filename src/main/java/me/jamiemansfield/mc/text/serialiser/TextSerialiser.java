@@ -150,6 +150,10 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
             text.apply(colour.get());
         }
 
+        if (obj.has("insertion")) {
+            text.insertion(obj.get("insertion").getAsString());
+        }
+
         if (obj.has("extra")) {
             final JsonArray extra = obj.getAsJsonArray("extra");
 
@@ -190,6 +194,11 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
         // Colour
         if (src.getColour() != TextColour.NONE) {
             json.add("color", new JsonPrimitive(src.getColour().getInternalName()));
+        }
+
+        // Insertion
+        if (src.getInsertion().isPresent()) {
+            json.add("insertion", new JsonPrimitive(src.getInsertion().get()));
         }
 
         // Children

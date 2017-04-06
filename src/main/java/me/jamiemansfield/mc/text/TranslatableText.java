@@ -33,6 +33,7 @@ import me.jamiemansfield.mc.text.format.TextDecoration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents a translatable text object within Minecraft.
@@ -52,8 +53,8 @@ public final class TranslatableText extends Text {
     final List<Text> args;
 
     TranslatableText(final String key, final List<Text> args, final Map<TextDecoration, Boolean> decorations,
-            final TextColour colour, final List<Text> children) {
-        super(decorations, colour, children);
+            final TextColour colour, final Optional<String> insertion, final List<Text> children) {
+        super(decorations, colour, insertion, children);
         this.key = key;
         this.args = args;
     }
@@ -122,7 +123,7 @@ public final class TranslatableText extends Text {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.key, this.args, this.decorations, this.colour, this.children);
+        return Objects.hash(this.key, this.args, this.decorations, this.colour, this.insertion, this.children);
     }
 
     public static final class Builder extends Text.Builder {
@@ -205,6 +206,14 @@ public final class TranslatableText extends Text {
          * {@inheritDoc}
          */
         @Override
+        public Builder insertion(final String insertion) {
+            return (Builder) super.insertion(insertion);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public Builder append(Text child) {
             return (Builder) super.append(child);
         }
@@ -214,7 +223,7 @@ public final class TranslatableText extends Text {
          */
         @Override
         public TranslatableText build() {
-            return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.children);
+            return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.insertion, this.children);
         }
 
     }
