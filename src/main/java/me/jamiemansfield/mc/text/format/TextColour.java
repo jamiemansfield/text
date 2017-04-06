@@ -27,6 +27,8 @@ package me.jamiemansfield.mc.text.format;
 
 import me.jamiemansfield.mc.text.Text;
 
+import java.util.Objects;
+
 /**
  * Represents a colour that can be applied to some {@link Text}.
  *
@@ -43,6 +45,12 @@ public final class TextColour {
      * parent, or the default colour.
      */
     public static final TextColour NONE = new TextColour("none");
+
+    /**
+     * A special TextColour, provided by Minecraft representing the default colour
+     * (may vary in different situations).
+     */
+    public static final TextColour RESET = new TextColour("reset");
 
     public static final TextColour BLACK = new TextColour("black");
     public static final TextColour DARK_BLUE = new TextColour("dark_blue");
@@ -61,19 +69,21 @@ public final class TextColour {
     public static final TextColour YELLOW = new TextColour("yellow");
     public static final TextColour WHITE = new TextColour("white");
 
-    private final String name;
+    private final String internalName;
 
-    private TextColour(final String name) {
-        this.name = name;
+    private TextColour(final String internalName) {
+        this.internalName = internalName;
     }
 
     /**
      * Gets the internal name of the colour.
+     * The internal name being the identifier that Mojang have given to the colour
+     * and is used to identify the colour when being serialised and de-serialised.
      *
-     * @return The name
+     * @return The internal name
      */
-    public String getName() {
-        return this.name;
+    public String getInternalName() {
+        return this.internalName;
     }
 
     /**
@@ -81,7 +91,31 @@ public final class TextColour {
      */
     @Override
     public String toString() {
-        return this.getName();
+        return this.getInternalName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof TextColour)) {
+            return false;
+        }
+
+        final TextColour that = (TextColour) obj;
+        return this.internalName.equals(that.internalName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.internalName);
     }
 
 }

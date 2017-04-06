@@ -66,6 +66,7 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
             .build();
 
     private static final Set<TextColour> COLOURS = ImmutableSet.<TextColour>builder()
+            .add(TextColour.RESET)
             .add(TextColour.BLACK)
             .add(TextColour.DARK_BLUE)
             .add(TextColour.DARK_GREEN)
@@ -104,6 +105,9 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
         return GSON.fromJson(text, Text.class);
     }
 
+    private TextSerialiser() {
+    }
+
     @Override
     public Text deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (!json.isJsonObject()) {
@@ -133,12 +137,12 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
         }
 
         DECORATIONS.stream()
-                .filter(decoration -> obj.has(decoration.getName()))
-                .forEach(decoration -> text.apply(decoration, obj.get(decoration.getName()).getAsBoolean()));
+                .filter(decoration -> obj.has(decoration.getInternalName()))
+                .forEach(decoration -> text.apply(decoration, obj.get(decoration.getInternalName()).getAsBoolean()));
 
         if (obj.has("color")) {
             final Optional<TextColour> colour = COLOURS.stream()
-                    .filter(clr -> clr.getName().equals(obj.get("color").getAsString()))
+                    .filter(clr -> clr.getInternalName().equals(obj.get("color").getAsString()))
                     .findAny();
             if (!colour.isPresent()) {
                 throw new JsonParseException("Terribly sorry, but I will not be able to deserialise " + json);
@@ -181,11 +185,11 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
 
         // Decorations
         src.getDecorations().entrySet()
-                .forEach(e -> json.add(e.getKey().getName(), new JsonPrimitive(e.getValue().toString())));
+                .forEach(e -> json.add(e.getKey().getInternalName(), new JsonPrimitive(e.getValue().toString())));
 
         // Colour
         if (src.getColour() != TextColour.NONE) {
-            json.add("color", new JsonPrimitive(src.getColour().getName()));
+            json.add("color", new JsonPrimitive(src.getColour().getInternalName()));
         }
 
         // Children

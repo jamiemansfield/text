@@ -27,6 +27,8 @@ package me.jamiemansfield.mc.text.format;
 
 import me.jamiemansfield.mc.text.Text;
 
+import java.util.Objects;
+
 /**
  * Represents a decorative style that can be applied to some {@link Text}.
  */
@@ -39,19 +41,21 @@ public final class TextDecoration {
     public static final TextDecoration ITALIC = new TextDecoration("italic");
     public static final TextDecoration RESET = new TextDecoration("reset");
 
-    private final String name;
+    private final String internalName;
 
-    private TextDecoration(final String name) {
-        this.name = name;
+    private TextDecoration(final String internalName) {
+        this.internalName = internalName;
     }
 
     /**
      * Gets the internal name of the decorative style.
+     * The internal name being the identifier that Mojang have given to the style
+     * and is used to identify the style when being serialised and de-serialised.
      *
-     * @return The name
+     * @return The internal name
      */
-    public String getName() {
-        return this.name;
+    public String getInternalName() {
+        return this.internalName;
     }
 
     /**
@@ -59,7 +63,31 @@ public final class TextDecoration {
      */
     @Override
     public String toString() {
-        return this.getName();
+        return this.getInternalName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof TextDecoration)) {
+            return false;
+        }
+
+        final TextDecoration that = (TextDecoration) obj;
+        return this.internalName.equals(that.internalName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.internalName);
     }
 
 }
