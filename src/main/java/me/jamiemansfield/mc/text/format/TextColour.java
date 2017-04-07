@@ -44,30 +44,44 @@ public final class TextColour {
      * Should NONE be applied to some {@link Text}, it will take the colour of its
      * parent, or the default colour.
      */
-    public static final TextColour NONE = new TextColour("none");
+    public static final TextColour NONE = of("none");
 
     /**
      * A special TextColour, provided by Minecraft representing the default colour
      * (may vary in different situations).
      */
-    public static final TextColour RESET = new TextColour("reset");
+    public static final TextColour RESET = of("reset");
 
-    public static final TextColour BLACK = new TextColour("black");
-    public static final TextColour DARK_BLUE = new TextColour("dark_blue");
-    public static final TextColour DARK_GREEN = new TextColour("dark_green");
-    public static final TextColour DARK_CYAN = new TextColour("dark_aqua");
-    public static final TextColour DARK_RED = new TextColour("dark_red");
-    public static final TextColour PURPLE = new TextColour("dark_purple");
-    public static final TextColour GOLD = new TextColour("gold");
-    public static final TextColour GREY = new TextColour("gray");
-    public static final TextColour DARK_GREY = new TextColour("dark_gray");
-    public static final TextColour BLUE = new TextColour("blue");
-    public static final TextColour BRIGHT_GREEN = new TextColour("green");
-    public static final TextColour CYAN = new TextColour("aqua");
-    public static final TextColour RED = new TextColour("red");
-    public static final TextColour PINK = new TextColour("light_purple");
-    public static final TextColour YELLOW = new TextColour("yellow");
-    public static final TextColour WHITE = new TextColour("white");
+    public static final TextColour BLACK = of("black");
+    public static final TextColour DARK_BLUE = of("dark_blue");
+    public static final TextColour DARK_GREEN = of("dark_green");
+    public static final TextColour DARK_CYAN = of("dark_aqua");
+    public static final TextColour DARK_RED = of("dark_red");
+    public static final TextColour PURPLE = of("dark_purple");
+    public static final TextColour GOLD = of("gold");
+    public static final TextColour GREY = of("gray");
+    public static final TextColour DARK_GREY = of("dark_gray");
+    public static final TextColour BLUE = of("blue");
+    public static final TextColour BRIGHT_GREEN = of("green");
+    public static final TextColour CYAN = of("aqua");
+    public static final TextColour RED = of("red");
+    public static final TextColour PINK = of("light_purple");
+    public static final TextColour YELLOW = of("yellow");
+    public static final TextColour WHITE = of("white");
+
+    /**
+     * Creates a text colour object backed by the given internal name.
+     *
+     * This is provided as to allow extra colours to be used should text
+     * be used in an environment which isn't Minecraft, or just more colours
+     * are available.
+     *
+     * @param internalName The internal name of the colour
+     * @return The colour
+     */
+    public static TextColour of(final String internalName) {
+        return new TextColour(internalName);
+    }
 
     private final String internalName;
 

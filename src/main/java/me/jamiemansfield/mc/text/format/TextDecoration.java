@@ -34,12 +34,31 @@ import java.util.Objects;
  */
 public final class TextDecoration {
 
-    public static final TextDecoration OBFUSCATED = new TextDecoration("obfuscated");
-    public static final TextDecoration BOLD = new TextDecoration("bold");
-    public static final TextDecoration STRIKETHROUGH = new TextDecoration("strikethrough");
-    public static final TextDecoration UNDERLINED = new TextDecoration("underline");
-    public static final TextDecoration ITALIC = new TextDecoration("italic");
-    public static final TextDecoration RESET = new TextDecoration("reset");
+    /**
+     * Should RESET be applied to some {@link Text}, it will remove any colours and
+     * any decorations already applied.
+     */
+    public static final TextDecoration RESET = of("reset");
+
+    public static final TextDecoration OBFUSCATED = of("obfuscated");
+    public static final TextDecoration BOLD = of("bold");
+    public static final TextDecoration STRIKETHROUGH = of("strikethrough");
+    public static final TextDecoration UNDERLINED = of("underline");
+    public static final TextDecoration ITALIC = of("italic");
+
+    /**
+     * Creates a text decoration object backed by the given internal name.
+     *
+     * This is provided as to allow extra styles to be used should text
+     * be used in an environment which isn't Minecraft, or just more styles
+     * are available.
+     *
+     * @param internalName The internal name of the style
+     * @return The decoration
+     */
+    public static TextDecoration of(final String internalName) {
+        return new TextDecoration(internalName);
+    }
 
     private final String internalName;
 
