@@ -42,6 +42,8 @@ import com.google.gson.JsonSerializer;
 import me.jamiemansfield.mc.text.LiteralText;
 import me.jamiemansfield.mc.text.Text;
 import me.jamiemansfield.mc.text.TranslatableText;
+import me.jamiemansfield.mc.text.event.ClickEvent;
+import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
@@ -58,8 +60,13 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
             .registerTypeHierarchyAdapter(Text.class, new TextSerialiser())
             .create();
 
+    // Registries for formatting
     public static final Registry<TextDecoration> decorationRegistry = new Registry<>();
     public static final Registry<TextColour> colourRegistry = new Registry<>();
+
+    // Registries for events
+    public static final Registry<ClickEvent.Action> clickEventActionRegistry = new Registry<>();
+    public static final Registry<HoverEvent.Action> hoverEventActionRegistry = new Registry<>();
 
     static {
         decorationRegistry.register(
@@ -88,6 +95,19 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
                 TextColour.PINK,
                 TextColour.YELLOW,
                 TextColour.WHITE
+        );
+
+        clickEventActionRegistry.register(
+                ClickEvent.Action.OPEN_URL,
+                ClickEvent.Action.RUN_COMMAND,
+                ClickEvent.Action.SUGGEST_COMMAND,
+                ClickEvent.Action.CHANGE_PAGE
+        );
+        hoverEventActionRegistry.register(
+                HoverEvent.Action.SHOW_TEXT,
+                HoverEvent.Action.SHOW_ITEM,
+                HoverEvent.Action.SHOW_ENTITY,
+                HoverEvent.Action.SHOW_ACHIEVEMENT
         );
     }
 
@@ -160,6 +180,28 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
             text.insertion(obj.get("insertion").getAsString());
         }
 
+        if (obj.has("clickEvent")) {
+            final Optional<ClickEvent.Action> action = clickEventActionRegistry.getEntries().stream()
+                    .filter(a -> obj.get("clickEvent").getAsJsonObject().get("action").getAsString().equals(a.getInternalName()))
+                    .findAny();
+            if (!action.isPresent()) {
+                throw new JsonParseException("Terribly sorry, but I will not be able to deserialise " + json);
+            }
+            final JsonElement element = obj.get("clickEvent").getAsJsonObject().get("value");
+            text.click(new ClickEvent(action.get(), this.deserialize(element, element.getClass(), context)));
+        }
+
+        if (obj.has("hoverEvent")) {
+            final Optional<HoverEvent.Action> action = hoverEventActionRegistry.getEntries().stream()
+                    .filter(a -> obj.get("hoverEvent").getAsJsonObject().get("action").getAsString().equals(a.getInternalName()))
+                    .findAny();
+            if (!action.isPresent()) {
+                throw new JsonParseException("Terribly sorry, but I will not be able to deserialise " + json);
+            }
+            final JsonElement element = obj.get("hoverEvent").getAsJsonObject().get("value");
+            text.hover(new HoverEvent(action.get(), this.deserialize(element, element.getClass(), context)));
+        }
+
         if (obj.has("extra")) {
             final JsonArray extra = obj.getAsJsonArray("extra");
 
@@ -205,6 +247,26 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
         // Insertion
         if (src.getInsertion().isPresent()) {
             json.add("insertion", new JsonPrimitive(src.getInsertion().get()));
+        }
+
+        // Click event
+        if (src.getClickEvent().isPresent()) {
+            final JsonObject clickEvent = new JsonObject();
+            clickEvent.add("action", new JsonPrimitive(src.getClickEvent().get().getAction().getInternalName()));
+            clickEvent.add("value",
+                    this.serialize(src.getClickEvent().get().getValue(), src.getClickEvent().get().getValue().getClass(), context));
+
+            json.add("clickEvent", clickEvent);
+        }
+
+        // Hover event
+        if (src.getHoverEvent().isPresent()) {
+            final JsonObject hoverEvent = new JsonObject();
+            hoverEvent.add("action", new JsonPrimitive(src.getHoverEvent().get().getAction().getInternalName()));
+            hoverEvent.add("value",
+                    this.serialize(src.getHoverEvent().get().getValue(), src.getHoverEvent().get().getValue().getClass(), context));
+
+            json.add("hoverEvent", hoverEvent);
         }
 
         // Children

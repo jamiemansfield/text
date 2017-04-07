@@ -27,6 +27,8 @@ package me.jamiemansfield.mc.text;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
+import me.jamiemansfield.mc.text.event.ClickEvent;
+import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
@@ -53,8 +55,9 @@ public final class TranslatableText extends Text {
     final List<Text> args;
 
     TranslatableText(final String key, final List<Text> args, final Map<TextDecoration, Boolean> decorations,
-            final TextColour colour, final Optional<String> insertion, final List<Text> children) {
-        super(decorations, colour, insertion, children);
+            final TextColour colour, final Optional<String> insertion,final Optional<ClickEvent> clickEvent,
+            final Optional<HoverEvent> hoverEvent, final List<Text> children) {
+        super(decorations, colour, insertion, clickEvent, hoverEvent, children);
         this.key = key;
         this.args = args;
     }
@@ -145,6 +148,9 @@ public final class TranslatableText extends Text {
             this.args = Lists.newArrayList(text.args);
             this.decorations.putAll(text.decorations);
             this.colour = text.colour;
+            this.insertion = text.insertion;
+            this.clickEvent = text.clickEvent;
+            this.hoverEvent = text.hoverEvent;
             this.children.addAll(text.children);
         }
 
@@ -214,6 +220,22 @@ public final class TranslatableText extends Text {
          * {@inheritDoc}
          */
         @Override
+        public Builder click(final ClickEvent clickEvent) {
+            return (Builder) super.click(clickEvent);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Builder hover(final HoverEvent hoverEvent) {
+            return (Builder) super.hover(hoverEvent);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public Builder append(Text child) {
             return (Builder) super.append(child);
         }
@@ -223,7 +245,8 @@ public final class TranslatableText extends Text {
          */
         @Override
         public TranslatableText build() {
-            return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.insertion, this.children);
+            return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.insertion,
+                    this.clickEvent, this.hoverEvent, this.children);
         }
 
     }

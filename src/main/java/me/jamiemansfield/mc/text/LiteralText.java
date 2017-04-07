@@ -26,6 +26,8 @@
 package me.jamiemansfield.mc.text;
 
 import com.google.common.base.MoreObjects;
+import me.jamiemansfield.mc.text.event.ClickEvent;
+import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
@@ -47,8 +49,9 @@ public final class LiteralText extends Text {
     private final String content;
 
     private LiteralText(final String content, final Map<TextDecoration, Boolean> decorations, final TextColour colour,
-            final Optional<String> insertion, final List<Text> children) {
-        super(decorations, colour, insertion, children);
+            final Optional<String> insertion,final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent,
+            final List<Text> children) {
+        super(decorations, colour, insertion, clickEvent, hoverEvent, children);
         this.content = content;
     }
 
@@ -138,6 +141,9 @@ public final class LiteralText extends Text {
             this.content = text.content;
             this.decorations.putAll(text.decorations);
             this.colour = text.colour;
+            this.insertion = text.insertion;
+            this.clickEvent = text.clickEvent;
+            this.hoverEvent = text.hoverEvent;
             this.children.addAll(text.children);
         }
 
@@ -204,8 +210,24 @@ public final class LiteralText extends Text {
          * {@inheritDoc}
          */
         @Override
+        public Builder click(final ClickEvent clickEvent) {
+            return (Builder) super.click(clickEvent);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Builder hover(final HoverEvent hoverEvent) {
+            return (Builder) super.hover(hoverEvent);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public LiteralText build() {
-            return new LiteralText(this.content, this.decorations, this.colour, this.insertion, this.children);
+            return new LiteralText(this.content, this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);
         }
 
     }

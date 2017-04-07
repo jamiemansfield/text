@@ -28,6 +28,8 @@ package me.jamiemansfield.mc.text;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import me.jamiemansfield.mc.text.event.ClickEvent;
+import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
@@ -87,13 +89,17 @@ public abstract class Text {
     final Map<TextDecoration, Boolean> decorations;
     final TextColour colour;
     final Optional<String> insertion;
+    final Optional<ClickEvent> clickEvent;
+    final Optional<HoverEvent> hoverEvent;
     final List<Text> children;
 
     Text(final Map<TextDecoration, Boolean> decorations, final TextColour colour, final Optional<String> insertion,
-            final List<Text> children) {
+            final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent, final List<Text> children) {
         this.decorations = decorations;
         this.colour = colour;
         this.insertion = insertion;
+        this.clickEvent = clickEvent;
+        this.hoverEvent = hoverEvent;
         this.children = children;
     }
 
@@ -180,6 +186,24 @@ public abstract class Text {
     }
 
     /**
+     * Gets the {@link ClickEvent} to be used should the text be clicked.
+     *
+     * @return The click event
+     */
+    public Optional<ClickEvent> getClickEvent() {
+        return this.clickEvent;
+    }
+
+    /**
+     * Gets the {@link HoverEvent} to be used should the text be hovered over.
+     *
+     * @return The hover event
+     */
+    public Optional<HoverEvent> getHoverEvent() {
+        return this.hoverEvent;
+    }
+
+    /**
      * Returns all of the children of the text.
      *
      * @return The children
@@ -220,6 +244,8 @@ public abstract class Text {
                 .add("decorations", this.decorations)
                 .add("colour", this.colour)
                 .add("insertion", this.insertion.orElse(null))
+                .add("clickEvent", this.clickEvent.orElse(null))
+                .add("hoverEvent", this.hoverEvent.orElse(null))
                 .add("children", this.children);
     }
 
@@ -247,6 +273,8 @@ public abstract class Text {
         return this.decorations.equals(that.decorations) &&
                 this.colour.equals(that.colour) &&
                 this.insertion == that.insertion &&
+                this.clickEvent == that.clickEvent &&
+                this.hoverEvent == that.hoverEvent &&
                 this.children.equals(that.children);
     }
 
@@ -255,7 +283,7 @@ public abstract class Text {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.decorations, this.colour, this.insertion, this.children);
+        return Objects.hash(this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);
     }
 
     /**
@@ -266,6 +294,8 @@ public abstract class Text {
         final Map<TextDecoration, Boolean> decorations = Maps.newHashMap();
         TextColour colour = TextColour.NONE;
         Optional<String> insertion = Optional.empty();
+        Optional<ClickEvent> clickEvent = Optional.empty();
+        Optional<HoverEvent> hoverEvent = Optional.empty();
         final List<Text> children = Lists.newArrayList();
 
         Builder() {
@@ -331,6 +361,28 @@ public abstract class Text {
          */
         public Builder insertion(final String insertion) {
             this.insertion = Optional.of(insertion);
+            return this;
+        }
+
+        /**
+         * Applies the given {@link ClickEvent} to the text.
+         *
+         * @param clickEvent The click event to be applied
+         * @return The builder
+         */
+        public Builder click(final ClickEvent clickEvent) {
+            this.clickEvent = Optional.of(clickEvent);
+            return this;
+        }
+
+        /**
+         * Applies the given {@link HoverEvent} to the text.
+         *
+         * @param hoverEvent The hover event to be applied
+         * @return The builder
+         */
+        public Builder hover(final HoverEvent hoverEvent) {
+            this.hoverEvent = Optional.of(hoverEvent);
             return this;
         }
 
