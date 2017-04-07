@@ -108,6 +108,11 @@ public final class ClickEvent {
         public static final Action OPEN_URL = of("open_url");
         public static final Action RUN_COMMAND = of("run_command");
         public static final Action SUGGEST_COMMAND = of("suggest_command");
+
+        /**
+         * A special action, provided by Minecraft, used in books to advance to the
+         * next page.
+         */
         public static final Action CHANGE_PAGE = of("change_page");
 
         /**
