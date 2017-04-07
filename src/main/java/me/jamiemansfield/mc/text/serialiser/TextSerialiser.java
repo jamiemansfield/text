@@ -25,7 +25,9 @@
 
 package me.jamiemansfield.mc.text.serialiser;
 
-import com.google.common.collect.ImmutableSet;
+import static com.google.common.base.Preconditions.checkState;
+
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -56,34 +58,38 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
             .registerTypeHierarchyAdapter(Text.class, new TextSerialiser())
             .create();
 
-    private static final Set<TextDecoration> DECORATIONS = ImmutableSet.<TextDecoration>builder()
-            .add(TextDecoration.OBFUSCATED)
-            .add(TextDecoration.BOLD)
-            .add(TextDecoration.STRIKETHROUGH)
-            .add(TextDecoration.UNDERLINED)
-            .add(TextDecoration.ITALIC)
-            .add(TextDecoration.RESET)
-            .build();
+    public static final Registry<TextDecoration> decorationRegistry = new Registry<>();
+    public static final Registry<TextColour> colourRegistry = new Registry<>();
 
-    private static final Set<TextColour> COLOURS = ImmutableSet.<TextColour>builder()
-            .add(TextColour.RESET)
-            .add(TextColour.BLACK)
-            .add(TextColour.DARK_BLUE)
-            .add(TextColour.DARK_GREEN)
-            .add(TextColour.DARK_CYAN)
-            .add(TextColour.DARK_RED)
-            .add(TextColour.PURPLE)
-            .add(TextColour.GOLD)
-            .add(TextColour.GREY)
-            .add(TextColour.DARK_GREY)
-            .add(TextColour.BLUE)
-            .add(TextColour.BRIGHT_GREEN)
-            .add(TextColour.CYAN)
-            .add(TextColour.RED)
-            .add(TextColour.PINK)
-            .add(TextColour.YELLOW)
-            .add(TextColour.WHITE)
-            .build();
+    static {
+        decorationRegistry.register(
+                TextDecoration.OBFUSCATED,
+                TextDecoration.BOLD,
+                TextDecoration.STRIKETHROUGH,
+                TextDecoration.UNDERLINED,
+                TextDecoration.ITALIC,
+                TextDecoration.RESET
+        );
+        colourRegistry.register(
+                TextColour.RESET,
+                TextColour.BLACK,
+                TextColour.DARK_BLUE,
+                TextColour.DARK_GREEN,
+                TextColour.DARK_CYAN,
+                TextColour.DARK_RED,
+                TextColour.PURPLE,
+                TextColour.GOLD,
+                TextColour.GREY,
+                TextColour.DARK_GREY,
+                TextColour.BLUE,
+                TextColour.BRIGHT_GREEN,
+                TextColour.CYAN,
+                TextColour.RED,
+                TextColour.PINK,
+                TextColour.YELLOW,
+                TextColour.WHITE
+        );
+    }
 
     /**
      * Serialises the given {@link Text} to a {@link String}.
@@ -136,12 +142,12 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
             throw new JsonParseException("Terribly sorry, but I will not be able to deserialise " + json);
         }
 
-        DECORATIONS.stream()
+        decorationRegistry.getEntries().stream()
                 .filter(decoration -> obj.has(decoration.getInternalName()))
                 .forEach(decoration -> text.apply(decoration, obj.get(decoration.getInternalName()).getAsBoolean()));
 
         if (obj.has("color")) {
-            final Optional<TextColour> colour = COLOURS.stream()
+            final Optional<TextColour> colour = colourRegistry.getEntries().stream()
                     .filter(clr -> clr.getInternalName().equals(obj.get("color").getAsString()))
                     .findAny();
             if (!colour.isPresent()) {
@@ -214,6 +220,36 @@ public final class TextSerialiser implements JsonSerializer<Text>, JsonDeseriali
         }
 
         return json;
+    }
+
+    public static final class Registry<T> {
+
+        private final Set<T> entries = Sets.newHashSet();
+
+        Registry() {
+        }
+
+        /**
+         * Registers the given object(s), with the registry.
+         *
+         * @param objs The object(s)
+         */
+        public void register(T... objs) {
+            for (final T obj : objs) {
+                checkState(!this.entries.contains(obj), "The given object has already been registered!");
+                this.entries.add(obj);
+            }
+        }
+
+        /**
+         * Gets a {@link Set} of entries.
+         *
+         * @return The entries
+         */
+        public Set<T> getEntries() {
+            return Sets.newHashSet(this.entries);
+        }
+
     }
 
 }
