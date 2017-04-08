@@ -90,18 +90,17 @@ public abstract class TextSerialiser {
      *
      * @param obj The text to serialise
      * @return The serialised text
-     * @throws SerialisationException If serialisation fails
      */
-    public abstract String serialise(final Text obj) throws SerialisationException;
+    public abstract String serialise(final Text obj);
 
     /**
      * De-serialises the given {@link String} to a {@link Text}.
      *
      * @param obj The text to de-serialise
      * @return The de-serialised text
-     * @throws SerialisationException If de-serialisation fails
+     * @throws TextParseException If de-serialisation fails
      */
-    public abstract Text deserialise(final String obj) throws SerialisationException;
+    public abstract Text deserialise(final String obj) throws TextParseException;
 
     public static final class Registry<T> {
 

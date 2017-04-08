@@ -56,36 +56,12 @@ public final class LiteralText extends Text {
     }
 
     /**
-     * Returns the {@link String} content of <b>only</b> this {@link Text} object.
+     * Returns the {@link String} content of this {@link Text} object.
      *
      * @return The content
      */
     public String getContent() {
-        return this.getContent(false);
-    }
-
-    /**
-     * Returns the {@link String} content of this {@link Text} object, and its children if the
-     * user should so choice to do so.
-     *
-     * @param transitively {@code true} if the user would like the full content from all of the
-     *                     children too.
-     * @return The content
-     */
-    public String getContent(boolean transitively) {
-        if (!transitively || !this.hasChildren()) {
-            return this.content;
-        }
-
-        final StringBuilder transitiveContent = new StringBuilder();
-        transitiveContent.append(this.content);
-
-        this.children.stream()
-                .filter(text -> text instanceof LiteralText)
-                .map(text -> (LiteralText) text)
-                .forEach(text -> transitiveContent.append(text.getContent(true)));
-
-        return transitiveContent.toString();
+        return this.content;
     }
 
     /**

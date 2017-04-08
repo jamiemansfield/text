@@ -25,6 +25,9 @@ license {
     header = file('HEADER.txt')
 }
 
+processResources {
+    from 'LICENSE.txt'
+}
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir

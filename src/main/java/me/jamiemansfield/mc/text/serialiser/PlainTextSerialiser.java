@@ -25,22 +25,38 @@
 
 package me.jamiemansfield.mc.text.serialiser;
 
+import me.jamiemansfield.mc.text.LiteralText;
+import me.jamiemansfield.mc.text.Text;
+
 /**
- * A final class of {@link TextSerialiser}s.
+ * The {@link TextSerialiser} for just plain text, no formatting or translatable text here.
  */
-public final class TextSerialisers {
+public final class PlainTextSerialiser extends TextSerialiser {
 
-    /**
-     * The {@link TextSerialiser} for Mojang's JSON format.
-     */
-    public static final JsonSerialiser JSON = new JsonSerialiser();
+    @Override
+    public String serialise(final Text obj) {
+        if (!(obj instanceof LiteralText)) {
+            return "";
+        }
+        final LiteralText text = (LiteralText) obj;
 
-    /**
-     * The {@link TextSerialiser} for just plain text.
-     */
-    public static final PlainTextSerialiser PLAIN_TEXT = new PlainTextSerialiser();
+        if (!obj.hasChildren()) {
+            return text.getContent();
+        }
 
-    private TextSerialisers() {
+        final StringBuilder transitiveContent = new StringBuilder();
+        transitiveContent.append(text.getContent());
+
+        text.getChildren()
+                .forEach(t -> transitiveContent.append(this.serialise(t)));
+
+        return transitiveContent.toString();
+    }
+
+    @Override
+    public Text deserialise(final String obj) {
+        return Text.builder(obj)
+                .build();
     }
 
 }

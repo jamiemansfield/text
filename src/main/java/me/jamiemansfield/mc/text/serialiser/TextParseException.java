@@ -26,12 +26,17 @@
 package me.jamiemansfield.mc.text.serialiser;
 
 /**
- * An exception used by {@link TextSerialiser}s.
+ * This exception is used in cases, where a {@link TextSerialiser} has
+ * encountered an issue while parsing text.
  */
-public class SerialisationException extends RuntimeException {
+public class TextParseException extends RuntimeException {
 
-    public SerialisationException(final String msg) {
+    public TextParseException(final String msg) {
         super(msg);
+    }
+
+    public TextParseException(final String msg, final Throwable throwable) {
+        super(msg, throwable);
     }
 
 }

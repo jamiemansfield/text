@@ -41,6 +41,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
 import me.jamiemansfield.mc.text.LiteralText;
 import me.jamiemansfield.mc.text.Text;
 import me.jamiemansfield.mc.text.TranslatableText;
@@ -52,7 +53,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 /**
- * The serialiser (and deserialiser) for {@link Text}.
+ * The {@link TextSerialiser} for Mojang's json format.
  */
 public final class JsonSerialiser extends TextSerialiser implements JsonSerializer<Text>, JsonDeserializer<Text> {
 
@@ -214,13 +215,17 @@ public final class JsonSerialiser extends TextSerialiser implements JsonSerializ
     }
 
     @Override
-    public String serialise(final Text obj) throws SerialisationException {
+    public String serialise(final Text obj) {
         return GSON.toJson(obj);
     }
 
     @Override
-    public Text deserialise(final String obj) throws SerialisationException {
-        return GSON.fromJson(obj, Text.class);
+    public Text deserialise(final String obj) throws TextParseException {
+        try {
+            return GSON.fromJson(obj, Text.class);
+        } catch (JsonSyntaxException ex) {
+            throw new TextParseException("Failed to parse json text!", ex);
+        }
     }
 
 }
