@@ -10,7 +10,7 @@ targetCompatibility = 1.8
 
 group = 'me.jamiemansfield.mc'
 archivesBaseName = project.name.toLowerCase()
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
