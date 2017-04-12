@@ -64,9 +64,6 @@ public final class LiteralText extends Text {
         return this.content;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public LiteralText.Builder toBuilder() {
         return new LiteralText.Builder(this);
@@ -78,9 +75,6 @@ public final class LiteralText extends Text {
                 .add("content", this.content);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -94,9 +88,6 @@ public final class LiteralText extends Text {
         return this.content.equals(that.content);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.content, this.decorations, this.colour, this.insertion, this.children);
@@ -134,73 +125,46 @@ public final class LiteralText extends Text {
             return this;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder apply(TextDecoration decoration) {
             return (Builder) super.apply(decoration);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder unapply(TextDecoration decoration) {
             return (Builder) super.unapply(decoration);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder apply(TextDecoration decoration, Boolean active) {
             return (Builder) super.apply(decoration, active);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder apply(TextColour colour) {
             return (Builder) super.apply(colour);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder append(Text child) {
             return (Builder) super.append(child);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder insertion(final String insertion) {
             return (Builder) super.insertion(insertion);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder click(final ClickEvent clickEvent) {
             return (Builder) super.click(clickEvent);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder hover(final HoverEvent hoverEvent) {
             return (Builder) super.hover(hoverEvent);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public LiteralText build() {
             return new LiteralText(this.content, this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);

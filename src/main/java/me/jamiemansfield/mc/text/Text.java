@@ -249,17 +249,11 @@ public abstract class Text {
                 .add("children", this.children);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.getStringHelper().toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -278,9 +272,6 @@ public abstract class Text {
                 this.children.equals(that.children);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);

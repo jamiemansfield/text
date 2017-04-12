@@ -77,17 +77,11 @@ public final class TextDecoration {
         return this.internalName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.getInternalName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -101,9 +95,6 @@ public final class TextDecoration {
         return this.internalName.equals(that.internalName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.internalName);

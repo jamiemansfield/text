@@ -100,17 +100,11 @@ public final class TextColour {
         return this.internalName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.getInternalName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -124,9 +118,6 @@ public final class TextColour {
         return this.internalName.equals(that.internalName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.internalName);

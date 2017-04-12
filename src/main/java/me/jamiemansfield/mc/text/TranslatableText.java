@@ -89,9 +89,6 @@ public final class TranslatableText extends Text {
         return !this.args.isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public TranslatableText.Builder toBuilder() {
         return new TranslatableText.Builder(this);
@@ -104,9 +101,6 @@ public final class TranslatableText extends Text {
                 .add("args", this.args);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -121,9 +115,6 @@ public final class TranslatableText extends Text {
                 this.args.equals(that.args);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.key, this.args, this.decorations, this.colour, this.insertion, this.children);
@@ -176,73 +167,46 @@ public final class TranslatableText extends Text {
             return this;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder apply(TextDecoration decoration) {
             return (Builder) super.apply(decoration);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder unapply(TextDecoration decoration) {
             return (Builder) super.unapply(decoration);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder apply(TextDecoration decoration, Boolean active) {
             return (Builder) super.apply(decoration, active);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder apply(TextColour colour) {
             return (Builder) super.apply(colour);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder insertion(final String insertion) {
             return (Builder) super.insertion(insertion);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder click(final ClickEvent clickEvent) {
             return (Builder) super.click(clickEvent);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder hover(final HoverEvent hoverEvent) {
             return (Builder) super.hover(hoverEvent);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Builder append(Text child) {
             return (Builder) super.append(child);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public TranslatableText build() {
             return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.insertion,

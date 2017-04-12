@@ -55,13 +55,13 @@ import java.util.Optional;
 /**
  * The {@link TextSerialiser} for Mojang's json format.
  */
-public final class JsonSerialiser extends TextSerialiser implements JsonSerializer<Text>, JsonDeserializer<Text> {
+public final class JsonTextSerialiser extends TextSerialiser implements JsonSerializer<Text>, JsonDeserializer<Text> {
 
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(Text.class, new JsonSerialiser())
+            .registerTypeHierarchyAdapter(Text.class, TextSerialisers.JSON)
             .create();
 
-    JsonSerialiser() {
+    JsonTextSerialiser() {
     }
 
     @Override

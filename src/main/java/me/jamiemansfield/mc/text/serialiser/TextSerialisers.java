@@ -33,7 +33,7 @@ public final class TextSerialisers {
     /**
      * The {@link TextSerialiser} for Mojang's JSON format.
      */
-    public static final JsonSerialiser JSON = new JsonSerialiser();
+    public static final JsonTextSerialiser JSON = new JsonTextSerialiser();
 
     /**
      * The {@link TextSerialiser} for just plain text.

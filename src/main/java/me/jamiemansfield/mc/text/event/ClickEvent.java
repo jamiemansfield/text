@@ -63,9 +63,6 @@ public final class ClickEvent {
         return this.value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -74,9 +71,6 @@ public final class ClickEvent {
                 .toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -91,9 +85,6 @@ public final class ClickEvent {
                 this.action == that.action;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.value, this.action);
@@ -146,17 +137,11 @@ public final class ClickEvent {
             return this.internalName;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return this.getInternalName();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {
@@ -170,9 +155,6 @@ public final class ClickEvent {
             return this.internalName.equals(that.internalName);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int hashCode() {
             return Objects.hash(this.internalName);
