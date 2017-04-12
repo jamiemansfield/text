@@ -112,7 +112,7 @@ public final class TranslatableText extends Text {
 
         final TranslatableText that = (TranslatableText) obj;
         return this.key.equals(that.key) &&
-                this.args.equals(that.args);
+                Objects.equals(this.args, that.args);
     }
 
     @Override

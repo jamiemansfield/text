@@ -81,8 +81,8 @@ public final class ClickEvent {
         }
         final ClickEvent that = (ClickEvent) obj;
 
-        return this.value == that.value &&
-                this.action == that.action;
+        return Objects.equals(this.value, that.value) &&
+                Objects.equals(this.action, that.action);
     }
 
     @Override

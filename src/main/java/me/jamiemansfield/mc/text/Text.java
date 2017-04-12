@@ -264,12 +264,12 @@ public abstract class Text {
         }
 
         final Text that = (Text) obj;
-        return this.decorations.equals(that.decorations) &&
-                this.colour.equals(that.colour) &&
-                this.insertion == that.insertion &&
-                this.clickEvent == that.clickEvent &&
-                this.hoverEvent == that.hoverEvent &&
-                this.children.equals(that.children);
+        return Objects.equals(this.decorations, that.decorations) &&
+                Objects.equals(this.colour, that.colour) &&
+                Objects.equals(this.insertion.get(), that.insertion.get()) &&
+                Objects.equals(this.clickEvent.get(), that.clickEvent.get()) &&
+                Objects.equals(this.hoverEvent.get(), that.hoverEvent.get()) &&
+                Objects.equals(this.children, that.children);
     }
 
     @Override
