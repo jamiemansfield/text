@@ -58,7 +58,7 @@ import java.util.Optional;
 public final class JsonTextSerialiser extends TextSerialiser implements JsonSerializer<Text>, JsonDeserializer<Text> {
 
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(Text.class, TextSerialisers.JSON)
+            .registerTypeHierarchyAdapter(Text.class, new JsonTextSerialiser())
             .create();
 
     JsonTextSerialiser() {
