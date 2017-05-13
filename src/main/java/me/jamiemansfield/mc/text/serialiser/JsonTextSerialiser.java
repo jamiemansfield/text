@@ -42,6 +42,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
+import me.jamiemansfield.mc.text.KeybindText;
 import me.jamiemansfield.mc.text.LiteralText;
 import me.jamiemansfield.mc.text.Text;
 import me.jamiemansfield.mc.text.TranslatableText;
@@ -79,7 +80,7 @@ public final class JsonTextSerialiser extends TextSerialiser implements JsonSeri
                 final JsonArray with = obj.getAsJsonArray("with");
                 final Text[] arguments = new Text[with.size()];
 
-                for (int i = 0; i < with.size(); i ++) {
+                for (int i = 0; i < with.size(); i++) {
                     final JsonElement element = with.get(i);
                     arguments[i] = this.deserialize(element, element.getClass(), context);
                 }
@@ -88,6 +89,8 @@ public final class JsonTextSerialiser extends TextSerialiser implements JsonSeri
             } else {
                 text = Text.translatableBuilder(obj.get("translate").getAsString());
             }
+        } else if (obj.has("keybind")) {
+            text = Text.keybindBuilder(obj.get("keybind").getAsString());
         } else {
             throw new JsonParseException("Terribly sorry, but I will not be able to deserialise " + json);
         }
@@ -163,6 +166,8 @@ public final class JsonTextSerialiser extends TextSerialiser implements JsonSeri
 
                 json.add("with", with);
             }
+        } else if (src instanceof KeybindText) {
+            json.add("keybind", new JsonPrimitive(((KeybindText) src).getKeybind()));
         }
 
         // Decorations

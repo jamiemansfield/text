@@ -86,6 +86,24 @@ public abstract class Text {
         return new TranslatableText.Builder(key, Arrays.asList(args));
     }
 
+    /**
+     * Returns a builder that can be used to create a keybind text object.
+     *
+     * @return A keybind text builder
+     */
+    public static KeybindText.Builder keybindBuilder() {
+        return new KeybindText.Builder();
+    }
+
+    /**
+     * Returns a builder that can be used to create a keybind text object, pre-filled with the given keybind.
+     *
+     * @return A keybind text builder
+     */
+    public static KeybindText.Builder keybindBuilder(final String keybind) {
+        return new KeybindText.Builder(keybind);
+    }
+
     final Map<TextDecoration, Boolean> decorations;
     final TextColour colour;
     final Optional<String> insertion;
@@ -256,19 +274,15 @@ public abstract class Text {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Text)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof Text)) return false;
 
         final Text that = (Text) obj;
         return Objects.equals(this.decorations, that.decorations) &&
                 Objects.equals(this.colour, that.colour) &&
-                Objects.equals(this.insertion.get(), that.insertion.get()) &&
-                Objects.equals(this.clickEvent.get(), that.clickEvent.get()) &&
-                Objects.equals(this.hoverEvent.get(), that.hoverEvent.get()) &&
+                Objects.equals(this.insertion.orElse(null), that.insertion.orElse(null)) &&
+                Objects.equals(this.clickEvent.orElse(null), that.clickEvent.orElse(null)) &&
+                Objects.equals(this.hoverEvent.orElse(null), that.hoverEvent.orElse(null)) &&
                 Objects.equals(this.children, that.children);
     }
 

@@ -17,6 +17,6 @@ repositories {
 }
 
 dependencies {
-    compile 'me.jamiemansfield.mc:text:0.0.1-SNAPSHOT'
+    compile 'me.jamiemansfield.mc:text:1.1.0-SNAPSHOT'
 }
 ```

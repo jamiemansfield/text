@@ -73,14 +73,10 @@ public final class HoverEvent {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof HoverEvent)) {
-            return false;
-        }
-        final HoverEvent that = (HoverEvent) obj;
+        if (this == obj) return true;
+        if (!(obj instanceof HoverEvent)) return false;
 
+        final HoverEvent that = (HoverEvent) obj;
         return Objects.equals(this.value, that.value) &&
                 Objects.equals(this.action, that.action);
     }
@@ -139,12 +135,8 @@ public final class HoverEvent {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (!(obj instanceof Action)) {
-                return false;
-            }
+            if (this == obj) return true;
+            if (!(obj instanceof Action)) return false;
 
             final Action that = (Action) obj;
             return this.internalName.equals(that.internalName);

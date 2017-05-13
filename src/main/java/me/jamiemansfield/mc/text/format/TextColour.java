@@ -107,12 +107,8 @@ public final class TextColour {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof TextColour)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof TextColour)) return false;
 
         final TextColour that = (TextColour) obj;
         return this.internalName.equals(that.internalName);

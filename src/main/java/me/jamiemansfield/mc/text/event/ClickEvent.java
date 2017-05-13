@@ -73,12 +73,8 @@ public final class ClickEvent {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof ClickEvent)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof ClickEvent)) return false;
         final ClickEvent that = (ClickEvent) obj;
 
         return Objects.equals(this.value, that.value) &&
@@ -144,12 +140,8 @@ public final class ClickEvent {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (!(obj instanceof Action)) {
-                return false;
-            }
+            if (this == obj) return true;
+            if (!(obj instanceof Action)) return false;
 
             final Action that = (Action) obj;
             return this.internalName.equals(that.internalName);

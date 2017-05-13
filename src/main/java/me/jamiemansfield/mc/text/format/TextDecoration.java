@@ -26,6 +26,7 @@
 package me.jamiemansfield.mc.text.format;
 
 import me.jamiemansfield.mc.text.Text;
+import me.jamiemansfield.mc.text.event.ClickEvent;
 
 import java.util.Objects;
 
@@ -84,12 +85,8 @@ public final class TextDecoration {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof TextDecoration)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof TextDecoration)) return false;
 
         final TextDecoration that = (TextDecoration) obj;
         return this.internalName.equals(that.internalName);

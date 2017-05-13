@@ -26,7 +26,6 @@
 package me.jamiemansfield.mc.text;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Lists;
 import me.jamiemansfield.mc.text.event.ClickEvent;
 import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
@@ -38,55 +37,31 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Represents a translatable text object within Minecraft.
- *
- * <p>
- *     The client will perform the translation, so it must be aware of how to do so!
- *     It is possible to add custom translations via the use of server resource packs.
- * </p>
+ * Represents the keybind text object within Minecraft, allows for keybindings
+ * to be specified as part of a text object, but processed client-side.
  *
  * <p>
  *     As with all Text objects within text, this is immutable.
  * </p>
  */
-public final class TranslatableText extends Text {
+public class KeybindText extends Text {
 
-    final String key;
-    final List<Text> args;
+    private final String keybind;
 
-    TranslatableText(final String key, final List<Text> args, final Map<TextDecoration, Boolean> decorations,
-            final TextColour colour, final Optional<String> insertion, final Optional<ClickEvent> clickEvent,
-            final Optional<HoverEvent> hoverEvent, final List<Text> children) {
+    private KeybindText(final String keybind, final Map<TextDecoration, Boolean> decorations, final TextColour colour,
+            final Optional<String> insertion, final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent,
+            final List<Text> children) {
         super(decorations, colour, insertion, clickEvent, hoverEvent, children);
-        this.key = key;
-        this.args = args;
+        this.keybind = keybind;
     }
 
     /**
-     * Returns the translation key of the translatable text.
+     * Gets the identifier of the keybinding specified by the text object.
      *
-     * @return The translation key
+     * @return The keybind
      */
-    public String getKey() {
-        return this.key;
-    }
-
-    /**
-     * Returns an {@link List} of the arguments of the translatable text.
-     *
-     * @return The arguments
-     */
-    public List<Text> getArgs() {
-        return Lists.newArrayList(this.args);
-    }
-
-    /**
-     * Returns weather the text has any arguments.
-     *
-     * @return {@code True} if the text has any arguments, {@code false} otherwise
-     */
-    public boolean hasArguments() {
-        return !this.args.isEmpty();
+    public String getKeybind() {
+        return this.keybind;
     }
 
     @Override
@@ -97,42 +72,36 @@ public final class TranslatableText extends Text {
     @Override
     MoreObjects.ToStringHelper getStringHelper() {
         return super.getStringHelper()
-                .add("key", this.key)
-                .add("args", this.args);
+                .add("keybind", this.keybind);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof TranslatableText) || !super.equals(obj)) return false;
+        if (!(obj instanceof KeybindText) || !super.equals(obj)) return false;
 
-        final TranslatableText that = (TranslatableText) obj;
-        return Objects.equals(this.key, that.key) &&
-                Objects.equals(this.args, that.args);
+        final KeybindText that = (KeybindText) obj;
+        return Objects.equals(this.keybind, that.keybind);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.key, this.args, this.decorations, this.colour, this.insertion, this.children);
+        return Objects.hash(super.hashCode(), this.keybind);
     }
 
     public static final class Builder extends Text.Builder {
 
-        String key = "";
-        final List<Text> args;
+        String keybind = "";
 
         Builder() {
-            this.args = Lists.newArrayList();
         }
 
-        Builder(final String key, final List<Text> args) {
-            this.key = key;
-            this.args = args;
+        Builder(final String keybind) {
+            this.keybind = keybind;
         }
 
-        Builder(final TranslatableText text) {
-            this.key = text.key;
-            this.args = Lists.newArrayList(text.args);
+        Builder(final KeybindText text) {
+            this.keybind = text.keybind;
             this.decorations.putAll(text.decorations);
             this.colour = text.colour;
             this.insertion = text.insertion;
@@ -142,24 +111,13 @@ public final class TranslatableText extends Text {
         }
 
         /**
-         * Sets the translation key to the given key.
+         * Sets the keybind to the keybind provided.
          *
-         * @param key The translation key
+         * @param keybind The keybind
          * @return The builder
          */
-        public Builder key(final String key) {
-            this.key = key;
-            return this;
-        }
-
-        /**
-         * Adds the given argument to the arguments.
-         *
-         * @param argument The argument
-         * @return The builder
-         */
-        public Builder argument(final Text argument) {
-            this.args.add(argument);
+        public Builder keybind(final String keybind) {
+            this.keybind = keybind;
             return this;
         }
 
@@ -184,6 +142,11 @@ public final class TranslatableText extends Text {
         }
 
         @Override
+        public Builder append(Text child) {
+            return (Builder) super.append(child);
+        }
+
+        @Override
         public Builder insertion(final String insertion) {
             return (Builder) super.insertion(insertion);
         }
@@ -199,14 +162,8 @@ public final class TranslatableText extends Text {
         }
 
         @Override
-        public Builder append(Text child) {
-            return (Builder) super.append(child);
-        }
-
-        @Override
-        public TranslatableText build() {
-            return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.insertion,
-                    this.clickEvent, this.hoverEvent, this.children);
+        public KeybindText build() {
+            return new KeybindText(this.keybind, this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);
         }
 
     }

@@ -41,7 +41,7 @@ import java.util.Optional;
  * the text has a {@link String} contents and nothing else.
  *
  * <p>
- *     As with all Text objects within FlintAPI, this is immutable.
+ *     As with all Text objects within text, this is immutable.
  * </p>
  */
 public final class LiteralText extends Text {
@@ -49,7 +49,7 @@ public final class LiteralText extends Text {
     private final String content;
 
     private LiteralText(final String content, final Map<TextDecoration, Boolean> decorations, final TextColour colour,
-            final Optional<String> insertion,final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent,
+            final Optional<String> insertion, final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent,
             final List<Text> children) {
         super(decorations, colour, insertion, clickEvent, hoverEvent, children);
         this.content = content;
@@ -65,8 +65,8 @@ public final class LiteralText extends Text {
     }
 
     @Override
-    public LiteralText.Builder toBuilder() {
-        return new LiteralText.Builder(this);
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
     @Override
@@ -77,20 +77,16 @@ public final class LiteralText extends Text {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof LiteralText) || !super.equals(obj)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof LiteralText) || !super.equals(obj)) return false;
 
         final LiteralText that = (LiteralText) obj;
-        return this.content.equals(that.content);
+        return Objects.equals(this.content, that.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.content, this.decorations, this.colour, this.insertion, this.children);
+        return Objects.hash(super.hashCode(), this.content);
     }
 
     public static final class Builder extends Text.Builder {
