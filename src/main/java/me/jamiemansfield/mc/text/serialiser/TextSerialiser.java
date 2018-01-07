@@ -34,6 +34,7 @@ import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -130,12 +131,12 @@ public abstract class TextSerialiser {
         }
 
         /**
-         * Gets a {@link Set} of entries.
+         * Gets an immutable-view of the registry entries.
          *
          * @return The entries
          */
         public Set<T> getEntries() {
-            return Sets.newHashSet(this.entries);
+            return Collections.unmodifiableSet(this.entries);
         }
 
     }

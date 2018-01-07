@@ -33,6 +33,7 @@ import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -109,12 +110,13 @@ public abstract class Text {
     }
 
     /**
-     * Returns all of the {@link TextDecoration}s for the text.
+     * Gets an immutable-view of all the {@link TextDecoration}s to whether they are
+     * enabled.
      *
      * @return The decorations
      */
     public Map<TextDecoration, Boolean> getDecorations() {
-        return Maps.newHashMap(this.decorations);
+        return Collections.unmodifiableMap(this.decorations);
     }
 
     /**
@@ -164,12 +166,12 @@ public abstract class Text {
     }
 
     /**
-     * Returns all of the children of the text.
+     * Gets an immutable-view of all the child text objects.
      *
      * @return The children
      */
     public List<Text> getChildren() {
-        return Lists.newArrayList(this.children);
+        return Collections.unmodifiableList(this.children);
     }
 
     /**

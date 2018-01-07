@@ -29,6 +29,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,12 +85,12 @@ public final class TranslatableText extends Text {
     }
 
     /**
-     * Returns an {@link List} of the arguments of the translatable text.
+     * Gets an immutable-view of all the arguments.
      *
      * @return The arguments
      */
     public List<Text> getArgs() {
-        return Lists.newArrayList(this.args);
+        return Collections.unmodifiableList(this.args);
     }
 
     /**
