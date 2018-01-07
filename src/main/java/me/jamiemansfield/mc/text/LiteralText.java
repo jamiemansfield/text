@@ -26,15 +26,8 @@
 package me.jamiemansfield.mc.text;
 
 import com.google.common.base.MoreObjects;
-import me.jamiemansfield.mc.text.event.ClickEvent;
-import me.jamiemansfield.mc.text.event.HoverEvent;
-import me.jamiemansfield.mc.text.format.TextColour;
-import me.jamiemansfield.mc.text.format.TextDecoration;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Represents a literal text object within Minecraft. This simply means that
@@ -46,13 +39,31 @@ import java.util.Optional;
  */
 public final class LiteralText extends Text {
 
+    /**
+     * Returns a builder that can be used to create a literal text object.
+     *
+     * @return A literal text builder
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Returns a builder that can be used to create a literal text object,
+     * pre-filled with the given content.
+     *
+     * @param content The content
+     * @return A literal text builder
+     */
+    public static Builder builder(final String content) {
+        return new Builder(content);
+    }
+
     private final String content;
 
-    private LiteralText(final String content, final Map<TextDecoration, Boolean> decorations, final TextColour colour,
-            final Optional<String> insertion, final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent,
-            final List<Text> children) {
-        super(decorations, colour, insertion, clickEvent, hoverEvent, children);
-        this.content = content;
+    private LiteralText(final Builder builder) {
+        super(builder);
+        this.content = builder.content;
     }
 
     /**
@@ -89,7 +100,7 @@ public final class LiteralText extends Text {
         return Objects.hash(super.hashCode(), this.content);
     }
 
-    public static final class Builder extends Text.Builder {
+    public static final class Builder extends Text.Builder<LiteralText, LiteralText.Builder> {
 
         String content = "";
 
@@ -122,48 +133,8 @@ public final class LiteralText extends Text {
         }
 
         @Override
-        public Builder apply(TextDecoration decoration) {
-            return (Builder) super.apply(decoration);
-        }
-
-        @Override
-        public Builder unapply(TextDecoration decoration) {
-            return (Builder) super.unapply(decoration);
-        }
-
-        @Override
-        public Builder apply(TextDecoration decoration, Boolean active) {
-            return (Builder) super.apply(decoration, active);
-        }
-
-        @Override
-        public Builder apply(TextColour colour) {
-            return (Builder) super.apply(colour);
-        }
-
-        @Override
-        public Builder append(Text child) {
-            return (Builder) super.append(child);
-        }
-
-        @Override
-        public Builder insertion(final String insertion) {
-            return (Builder) super.insertion(insertion);
-        }
-
-        @Override
-        public Builder click(final ClickEvent clickEvent) {
-            return (Builder) super.click(clickEvent);
-        }
-
-        @Override
-        public Builder hover(final HoverEvent hoverEvent) {
-            return (Builder) super.hover(hoverEvent);
-        }
-
-        @Override
         public LiteralText build() {
-            return new LiteralText(this.content, this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);
+            return new LiteralText(this);
         }
 
     }

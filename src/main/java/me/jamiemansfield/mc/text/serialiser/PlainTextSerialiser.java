@@ -55,7 +55,7 @@ public final class PlainTextSerialiser extends TextSerialiser {
 
     @Override
     public Text deserialise(final String obj) {
-        return Text.builder(obj)
+        return LiteralText.builder(obj)
                 .build();
     }
 

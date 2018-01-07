@@ -74,7 +74,7 @@ public final class JsonTextSerialiser extends TextSerialiser implements JsonSeri
         final Text.Builder text;
 
         if (obj.has("text")) {
-            text = Text.builder(obj.get("text").getAsString());
+            text = LiteralText.builder(obj.get("text").getAsString());
         } else if (obj.has("translate")) {
             if (obj.has("with") && obj.get("with").isJsonArray()) {
                 final JsonArray with = obj.getAsJsonArray("with");
@@ -85,12 +85,12 @@ public final class JsonTextSerialiser extends TextSerialiser implements JsonSeri
                     arguments[i] = this.deserialize(element, element.getClass(), context);
                 }
 
-                text = Text.translatableBuilder(obj.get("translate").getAsString(), arguments);
+                text = TranslatableText.builder(obj.get("translate").getAsString(), arguments);
             } else {
-                text = Text.translatableBuilder(obj.get("translate").getAsString());
+                text = TranslatableText.builder(obj.get("translate").getAsString());
             }
         } else if (obj.has("keybind")) {
-            text = Text.keybindBuilder(obj.get("keybind").getAsString());
+            text = KeybindText.builder(obj.get("keybind").getAsString());
         } else {
             throw new JsonParseException("Terribly sorry, but I will not be able to deserialise " + json);
         }
@@ -171,8 +171,7 @@ public final class JsonTextSerialiser extends TextSerialiser implements JsonSeri
         }
 
         // Decorations
-        src.getDecorations().entrySet()
-                .forEach(e -> json.add(e.getKey().getInternalName(), new JsonPrimitive(e.getValue().toString())));
+        src.getDecorations().forEach((key, value) -> json.add(key.getInternalName(), new JsonPrimitive(value.toString())));
 
         // Colour
         if (src.getColour() != TextColour.NONE) {

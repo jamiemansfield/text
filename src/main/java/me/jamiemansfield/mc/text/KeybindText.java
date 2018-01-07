@@ -26,15 +26,8 @@
 package me.jamiemansfield.mc.text;
 
 import com.google.common.base.MoreObjects;
-import me.jamiemansfield.mc.text.event.ClickEvent;
-import me.jamiemansfield.mc.text.event.HoverEvent;
-import me.jamiemansfield.mc.text.format.TextColour;
-import me.jamiemansfield.mc.text.format.TextDecoration;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Represents the keybind text object within Minecraft, allows for keybindings
@@ -44,15 +37,32 @@ import java.util.Optional;
  *     As with all Text objects within text, this is immutable.
  * </p>
  */
-public class KeybindText extends Text {
+public final class KeybindText extends Text {
+
+    /**
+     * Returns a builder that can be used to create a keybind text object.
+     *
+     * @return A keybind text builder
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Returns a builder that can be used to create a keybind text object,
+     * pre-filled with the given keybind.
+     *
+     * @return A keybind text builder
+     */
+    public static Builder builder(final String keybind) {
+        return new Builder(keybind);
+    }
 
     private final String keybind;
 
-    private KeybindText(final String keybind, final Map<TextDecoration, Boolean> decorations, final TextColour colour,
-            final Optional<String> insertion, final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent,
-            final List<Text> children) {
-        super(decorations, colour, insertion, clickEvent, hoverEvent, children);
-        this.keybind = keybind;
+    private KeybindText(final Builder builder) {
+        super(builder);
+        this.keybind = builder.keybind;
     }
 
     /**
@@ -89,7 +99,7 @@ public class KeybindText extends Text {
         return Objects.hash(super.hashCode(), this.keybind);
     }
 
-    public static final class Builder extends Text.Builder {
+    public static final class Builder extends Text.Builder<KeybindText, KeybindText.Builder> {
 
         String keybind = "";
 
@@ -122,48 +132,8 @@ public class KeybindText extends Text {
         }
 
         @Override
-        public Builder apply(TextDecoration decoration) {
-            return (Builder) super.apply(decoration);
-        }
-
-        @Override
-        public Builder unapply(TextDecoration decoration) {
-            return (Builder) super.unapply(decoration);
-        }
-
-        @Override
-        public Builder apply(TextDecoration decoration, Boolean active) {
-            return (Builder) super.apply(decoration, active);
-        }
-
-        @Override
-        public Builder apply(TextColour colour) {
-            return (Builder) super.apply(colour);
-        }
-
-        @Override
-        public Builder append(Text child) {
-            return (Builder) super.append(child);
-        }
-
-        @Override
-        public Builder insertion(final String insertion) {
-            return (Builder) super.insertion(insertion);
-        }
-
-        @Override
-        public Builder click(final ClickEvent clickEvent) {
-            return (Builder) super.click(clickEvent);
-        }
-
-        @Override
-        public Builder hover(final HoverEvent hoverEvent) {
-            return (Builder) super.hover(hoverEvent);
-        }
-
-        @Override
         public KeybindText build() {
-            return new KeybindText(this.keybind, this.decorations, this.colour, this.insertion, this.clickEvent, this.hoverEvent, this.children);
+            return new KeybindText(this);
         }
 
     }

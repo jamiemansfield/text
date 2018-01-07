@@ -33,7 +33,6 @@ import me.jamiemansfield.mc.text.event.HoverEvent;
 import me.jamiemansfield.mc.text.format.TextColour;
 import me.jamiemansfield.mc.text.format.TextDecoration;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,62 +47,6 @@ import java.util.Optional;
  */
 public abstract class Text {
 
-    /**
-     * Returns a builder that can be used to create some text.
-     *
-     * @return A text builder
-     */
-    public static LiteralText.Builder builder() {
-        return new LiteralText.Builder();
-    }
-
-    /**
-     * Returns a builder that can be used to create some text, pre-filled with the given content.
-     *
-     * @param content The content
-     * @return A text builder
-     */
-    public static LiteralText.Builder builder(final String content) {
-        return new LiteralText.Builder(content);
-    }
-
-    /**
-     * Returns a builder that can be used to create a translatable text object.
-     *
-     * @return A translatable text builder
-     */
-    public static TranslatableText.Builder translatableBuilder() {
-        return new TranslatableText.Builder();
-    }
-
-    /**
-     * Returns a builder that can be used to create a translatable text object, pre-filled with the given key
-     * and arguments.
-     *
-     * @return A translatable text builder
-     */
-    public static TranslatableText.Builder translatableBuilder(final String key, final Text... args) {
-        return new TranslatableText.Builder(key, Arrays.asList(args));
-    }
-
-    /**
-     * Returns a builder that can be used to create a keybind text object.
-     *
-     * @return A keybind text builder
-     */
-    public static KeybindText.Builder keybindBuilder() {
-        return new KeybindText.Builder();
-    }
-
-    /**
-     * Returns a builder that can be used to create a keybind text object, pre-filled with the given keybind.
-     *
-     * @return A keybind text builder
-     */
-    public static KeybindText.Builder keybindBuilder(final String keybind) {
-        return new KeybindText.Builder(keybind);
-    }
-
     final Map<TextDecoration, Boolean> decorations;
     final TextColour colour;
     final Optional<String> insertion;
@@ -111,14 +54,13 @@ public abstract class Text {
     final Optional<HoverEvent> hoverEvent;
     final List<Text> children;
 
-    Text(final Map<TextDecoration, Boolean> decorations, final TextColour colour, final Optional<String> insertion,
-            final Optional<ClickEvent> clickEvent, final Optional<HoverEvent> hoverEvent, final List<Text> children) {
-        this.decorations = decorations;
-        this.colour = colour;
-        this.insertion = insertion;
-        this.clickEvent = clickEvent;
-        this.hoverEvent = hoverEvent;
-        this.children = children;
+    Text(final Builder<?, ?> builder) {
+        this.decorations = builder.decorations;
+        this.colour = builder.colour;
+        this.insertion = builder.insertion;
+        this.clickEvent = builder.clickEvent;
+        this.hoverEvent = builder.hoverEvent;
+        this.children = builder.children;
     }
 
     /**
@@ -293,8 +235,11 @@ public abstract class Text {
 
     /**
      * A builder that can be used to create some {@link Text}.
+     *
+     * @param <T> The type of the text object the builder creates
+     * @param <B> The type of the builder that creates the text
      */
-    public static abstract class Builder {
+    public static abstract class Builder<T extends Text, B extends Builder<T, B>> {
 
         final Map<TextDecoration, Boolean> decorations = Maps.newHashMap();
         TextColour colour = TextColour.NONE;
@@ -312,7 +257,7 @@ public abstract class Text {
          * @param decoration The decoration to apply
          * @return The builder
          */
-        public Builder apply(final TextDecoration decoration) {
+        public B apply(final TextDecoration decoration) {
             return this.apply(decoration, true);
         }
 
@@ -322,7 +267,7 @@ public abstract class Text {
          * @param decoration The decoration to unapply
          * @return The builder
          */
-        public Builder unapply(final TextDecoration decoration) {
+        public B unapply(final TextDecoration decoration) {
             return this.apply(decoration, false);
         }
 
@@ -334,7 +279,7 @@ public abstract class Text {
          * @param active Weather to apply the decoration
          * @return The builder
          */
-        public Builder apply(final TextDecoration decoration, final Boolean active) {
+        public B apply(final TextDecoration decoration, final Boolean active) {
             if (decoration == TextDecoration.RESET) {
                 this.decorations.clear();
                 this.colour = TextColour.NONE;
@@ -344,7 +289,7 @@ public abstract class Text {
                 this.decorations.put(decoration, active);
             }
 
-            return this;
+            return (B) this;
         }
 
         /**
@@ -353,9 +298,9 @@ public abstract class Text {
          * @param colour The colour to apply
          * @return The builder
          */
-        public Builder apply(final TextColour colour) {
+        public B apply(final TextColour colour) {
             this.colour = colour;
-            return this;
+            return (B) this;
         }
 
         /**
@@ -364,9 +309,9 @@ public abstract class Text {
          * @param insertion The insertion to insert upon a shift-click
          * @return The builder
          */
-        public Builder insertion(final String insertion) {
+        public B insertion(final String insertion) {
             this.insertion = Optional.of(insertion);
-            return this;
+            return (B) this;
         }
 
         /**
@@ -375,9 +320,9 @@ public abstract class Text {
          * @param clickEvent The click event to be applied
          * @return The builder
          */
-        public Builder click(final ClickEvent clickEvent) {
+        public B click(final ClickEvent clickEvent) {
             this.clickEvent = Optional.of(clickEvent);
-            return this;
+            return (B) this;
         }
 
         /**
@@ -386,9 +331,9 @@ public abstract class Text {
          * @param hoverEvent The hover event to be applied
          * @return The builder
          */
-        public Builder hover(final HoverEvent hoverEvent) {
+        public B hover(final HoverEvent hoverEvent) {
             this.hoverEvent = Optional.of(hoverEvent);
-            return this;
+            return (B) this;
         }
 
         /**
@@ -397,9 +342,9 @@ public abstract class Text {
          * @param child The child text object
          * @return The builder
          */
-        public Builder append(final Text child) {
+        public B append(final Text child) {
             this.children.add(child);
-            return this;
+            return (B) this;
         }
 
         /**
@@ -407,7 +352,7 @@ public abstract class Text {
          *
          * @return A text object
          */
-        public abstract Text build();
+        public abstract T build();
 
     }
 

@@ -27,15 +27,10 @@ package me.jamiemansfield.mc.text;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
-import me.jamiemansfield.mc.text.event.ClickEvent;
-import me.jamiemansfield.mc.text.event.HoverEvent;
-import me.jamiemansfield.mc.text.format.TextColour;
-import me.jamiemansfield.mc.text.format.TextDecoration;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Represents a translatable text object within Minecraft.
@@ -51,15 +46,32 @@ import java.util.Optional;
  */
 public final class TranslatableText extends Text {
 
-    final String key;
-    final List<Text> args;
+    /**
+     * Returns a builder that can be used to create a translatable text object.
+     *
+     * @return A translatable text builder
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
 
-    TranslatableText(final String key, final List<Text> args, final Map<TextDecoration, Boolean> decorations,
-            final TextColour colour, final Optional<String> insertion, final Optional<ClickEvent> clickEvent,
-            final Optional<HoverEvent> hoverEvent, final List<Text> children) {
-        super(decorations, colour, insertion, clickEvent, hoverEvent, children);
-        this.key = key;
-        this.args = args;
+    /**
+     * Returns a builder that can be used to create a translatable text object,
+     * pre-filled with the given key and arguments.
+     *
+     * @return A translatable text builder
+     */
+    public static Builder builder(final String key, final Text... args) {
+        return new Builder(key, Arrays.asList(args));
+    }
+
+    private final String key;
+    private final List<Text> args;
+
+    TranslatableText(final Builder builder) {
+        super(builder);
+        this.key = builder.key;
+        this.args = builder.args;
     }
 
     /**
@@ -81,7 +93,7 @@ public final class TranslatableText extends Text {
     }
 
     /**
-     * Returns weather the text has any arguments.
+     * Returns whether the text has any arguments.
      *
      * @return {@code True} if the text has any arguments, {@code false} otherwise
      */
@@ -116,7 +128,7 @@ public final class TranslatableText extends Text {
         return Objects.hash(this.key, this.args, this.decorations, this.colour, this.insertion, this.children);
     }
 
-    public static final class Builder extends Text.Builder {
+    public static final class Builder extends Text.Builder<TranslatableText, TranslatableText.Builder> {
 
         String key = "";
         final List<Text> args;
@@ -164,49 +176,8 @@ public final class TranslatableText extends Text {
         }
 
         @Override
-        public Builder apply(TextDecoration decoration) {
-            return (Builder) super.apply(decoration);
-        }
-
-        @Override
-        public Builder unapply(TextDecoration decoration) {
-            return (Builder) super.unapply(decoration);
-        }
-
-        @Override
-        public Builder apply(TextDecoration decoration, Boolean active) {
-            return (Builder) super.apply(decoration, active);
-        }
-
-        @Override
-        public Builder apply(TextColour colour) {
-            return (Builder) super.apply(colour);
-        }
-
-        @Override
-        public Builder insertion(final String insertion) {
-            return (Builder) super.insertion(insertion);
-        }
-
-        @Override
-        public Builder click(final ClickEvent clickEvent) {
-            return (Builder) super.click(clickEvent);
-        }
-
-        @Override
-        public Builder hover(final HoverEvent hoverEvent) {
-            return (Builder) super.hover(hoverEvent);
-        }
-
-        @Override
-        public Builder append(Text child) {
-            return (Builder) super.append(child);
-        }
-
-        @Override
         public TranslatableText build() {
-            return new TranslatableText(this.key, this.args, this.decorations, this.colour, this.insertion,
-                    this.clickEvent, this.hoverEvent, this.children);
+            return new TranslatableText(this);
         }
 
     }
